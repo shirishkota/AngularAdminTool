@@ -1,0 +1,45 @@
+<div class="box box-warning">
+  <div class="box-header with-border">
+    <h3 class="box-title">Reports</h3>
+  </div>
+  <div class="box-body">
+    <form class="form-group" [formGroup]="reportForm">
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="projectName"> Project Name</label>
+        <div class="col-sm-10">
+          <select class="form-control" (change)="getProjectReports($event.target.value)" formControlName="projectId">
+            <option value = null> Select </option>
+            <option *ngFor ="let project of projects" value={{project.id}} > 
+              {{project.displayName}}
+            </option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="box box-warning" *ngIf="projectReport && projectReport.length > 0">
+  <div class="box-header with-border">
+      <h3 class="box-title">Report Details</h3> 
+  </div>
+  <div class="box-body">
+    <table class="table table-hover table-bordered">
+        <thead>
+          <tr>
+            <th> Employee Name </th>
+            <th> CG Trainings </th>
+            <th> SFI Trainings </th>
+            <th> Access Renewal </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor = "let report of projectReport">
+            <td> {{ report.firstName }} {{ report.lastName }}</td>
+            <td> {{ report.cgTrainingComplianceFlag }} </td>
+            <td> {{ report.sfTrainingComplianceFlag }} </td>
+            <td> {{ report.accessRenewalDate }} </td>
+          </tr>
+        </tbody>
+    </table>
+  </div>  
+</div>

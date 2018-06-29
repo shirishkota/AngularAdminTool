@@ -1,0 +1,30 @@
+
+<section class="content-header">
+    <h1>Employee Manager</h1>
+    <div class="row">
+        <ul class="nav nav-pills">
+          <li [routerLinkActive]="['active']">
+            <a routerLink="project-allocation"> Project Allocation </a>
+          </li>
+          <li [routerLinkActive]="['active']">
+            <a routerLink="compliance"> Compliance </a>
+          </li>
+          <li [routerLinkActive]="['active']">
+            <a routerLink="employee-odc-admin"> Employee ODC Administration </a>
+          </li>
+          <li [routerLinkActive]="['active']">
+            <a routerLink="reports"> Reports </a>
+          </li>
+        </ul>
+      </div>
+      <div class="row">
+        <section class="content-header">
+          <router-outlet></router-outlet>
+        </section>
+      </div>
+
+</section>
+
+
+
+ 

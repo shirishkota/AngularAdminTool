@@ -1,0 +1,366 @@
+<form class="form-horizontal" [formGroup]="projectAllocationForm">
+<div class="box box-warning">
+    <div class="box-header with-border">
+      <h3 class="box-title">Project Allocation</h3>
+    </div>
+  <div class="box-body">
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="kinId"> Employee Id <i class="fa fa-asterisk"></i></label> 
+      <div class="col-sm-6">
+        <input type="text" class="form-control" formControlName="kinId">
+        <div class="error" *ngIf="projectAllocationForm.get('kinId').hasError('required') && projectAllocationForm.get('kinId').touched">
+            Required
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <button type="button"  class="btn btn-primary btn-block" (click)="getAllocatedProjects()" [disabled]="!projectAllocationForm.valid">Search</button>
+      </div>
+      <div class="col-sm-2">
+         <button type="button" class="btn btn-default btn-block" (click)="resetProjectForm()">Cancel</button>
+      </div>
+    </div>
+  </div>  
+</div>
+
+<!-- Employee Project Information: START-->
+<div class="box box-warning" *ngIf="employeeDetails">
+    <div class="box-header with-border">
+      <h3 class="box-title"> Project Information</h3>
+      <button type="button" class="btn btn-primary btn-block" data-backdrop="static" data-keyboard="false" style="width: 115px;float: right"
+          data-toggle="modal" data-target="#newAllocation" >New Allocation
+      </button>
+    </div>
+    
+    <div class="box-body" style="overflow:auto;max-height:300px">
+      <div>
+        <table class="table table-hover table-bordered text-center">
+          <thead>
+            <tr style="background-color:#dff0d8">
+              <th> {{ employeeDetails.kinId }} {{ employeeDetails.empName }} </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              </tr>
+          </tbody>
+        </table> 
+      </div>
+      <div *ngIf="allocatedProjectsList && allocatedProjectsList.length > 0"> 
+        <table class="table table-hover table-bordered text-center">
+          <thead>
+            <tr>
+              <th> Project ID </th>
+              <th> Project Name </th>
+              <th> Allocation Start </th>
+              <th> Allocation End </th>
+              <th> Action </th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let project of allocatedProjectsList">
+            <tr>
+              <td> {{ project.projectCode }} </td>
+              <td> {{ project.projectName }} </td>
+              <td> {{ project.allocationStartDate }} </td>
+              <td> {{ project.allocationEndDate }} </td>
+              <td> <span >
+                  <i 
+                    class="fa fa-eye" 
+                    aria-hidden="true"
+                    data-backdrop="static" 
+                    data-keyboard="false" 
+                    data-toggle="modal" 
+                    data-target="#myModal"
+                    (click)="getAllocatedProjectDetails(project.projectAllocationId, project)"> </i> View/Edit
+                </span> 
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+  </div>  
+</div>
+<!-- Employee Project Information: END -->
+
+<!-- Client RO Information: START -->
+<div class="box box-warning" *ngIf="allocatedProjectsList.length > 0">
+    <div class="box-header with-border">
+        <h3 class="box-title"> Client RO Information</h3>
+    </div>    
+    <div class="box-body">
+      <table class="table table-hover table-bordered text-center">
+        <thead>
+          <tr style="background-color:#dff0d8">
+            <th> Client RO </th>
+            <th> Action </th>  
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <b><input type="text" class="form-control" formControlName="clientRO"></b>
+            </td>
+            <td>     
+              <span><button type="button"  class="btn btn-primary btn-block" style="width: 90%" (click)="editClientRO()"> {{ clientRoButton }} </button></span>
+            </td>
+            </tr>
+        </tbody>
+      </table>       
+    </div>
+</div>
+</form>
+<!-- Client RO Information: END -->
+
+
+<!-- Billing Modal Information : START-->
+<!-- <form class="form-horizontal" [formGroup]="allocationBillingForm"> -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:70%;">
+    <div class="modal-content">
+    <div class="modal-body">
+      <div class="box box-warning">
+        <div class="box-header with-border">
+          <h3 class="box-title">Project Allocation Billing Status</h3> 
+        </div>
+      <div class="box-body" style="overflow:auto;max-height:300px">
+      <div>
+        <table class="table table-hover table-bordered text-center">
+          <thead>
+            <tr style="background-color:#dff0d8">
+              <th> {{ employeeDetails.kinId }} {{ employeeDetails.empName }} </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+            </tr>
+          </tbody>
+        </table> 
+      </div>
+      <div class="form-group">
+          <label class="control-label col-sm-1" for="projectId"> Project Id: </label> 
+          <div class="col-sm-2">
+            <span> {{ selectedProject.projectCode }} </span>
+          </div>
+
+          <label class="control-label col-sm-1" for="projectName"> Project Name: </label> 
+          <div class="col-sm-2">
+            <span> {{ selectedProject.projectName }} </span>
+          </div>
+
+          <label class="control-label col-sm-1" for="allocationStartDate"> Allocation Start: </label> 
+          <div class="col-sm-2">
+            <span> {{ selectedProject.allocationStartDate }} </span>
+          </div>
+
+          <label class="control-label col-sm-1" for="allocationEnd"> Allocation End: </label> 
+          <div class="col-sm-2">
+            <span> {{ selectedProject.allocationEndDate }} </span> 
+          </div>
+      </div> 
+      <table class="table table-hover table-bordered text-center" *ngIf="projectBillingStatusList.length > 0">
+        <thead>
+          <tr style="background-color:#dff0d8">
+            <th> Billing Flag </th>
+            <th> Start </th>
+            <th> End </th>
+            <th> FTE Count </th>
+            <th> Update </th>
+          </tr>  
+        </thead>
+        <tbody style="overflow:auto;max-height:300px">
+          <tr *ngFor="let project of projectBillingStatusList">
+            <td *ngIf="project.projectAllocationBillabilityId === billabilityId">
+              <select class="form-control" [(ngModel)]="project.billability">
+                 <option value="Billable"> Billable</option>
+                 <option value="Non-Billable"> Non-Billable </option>
+                 <option value="Shadow"> Shadow </option>
+              </select>
+            </td>
+            <td *ngIf="project.projectAllocationBillabilityId !== billabilityId"> 
+              {{project.billability}} 
+            </td>
+
+            <td *ngIf="project.projectAllocationBillabilityId === billabilityId">
+              <input type="date" [(ngModel)]="project.billabilityStartDate"> 
+            </td>
+            <td *ngIf="project.projectAllocationBillabilityId !== billabilityId"> 
+              {{project.billabilityStartDate}} 
+            </td>
+
+            <td *ngIf="project.projectAllocationBillabilityId === billabilityId">
+                <input type="date" [(ngModel)]="project.billabilityEndDate"> 
+                <div class="error" [hidden]="validateDate(project.billabilityStartDate, project.billabilityEndDate)">
+                   End date should not be grater than Start date
+                </div>
+            </td>
+            <td *ngIf="project.projectAllocationBillabilityId !== billabilityId"> 
+              {{project.billabilityEndDate}} 
+            </td> 
+
+            <td *ngIf="project.projectAllocationBillabilityId === billabilityId">
+                <input type="number" [(ngModel)]="project.ftecount"> 
+                <div class="error" [hidden]="project.ftecount <= 1 && project.ftecount >= 0">
+                   Should be between 0.0 and 1.0
+              </div>
+            </td>
+            <td *ngIf="project.projectAllocationBillabilityId !== billabilityId"> 
+              {{project.ftecount}} 
+            </td>
+
+            <td *ngIf="project.projectAllocationBillabilityId === billabilityId"> 
+              <span *ngIf="project.ftecount > 0.0 && project.ftecount <= 1.0"> 
+                <span (click)="saveProjectBilling(selectedProject.projectAllocationId, project.projectAllocationBillabilityId)">
+                  <i class="fa fa-pencil-square" aria-hidden="true"></i> Save 
+                </span>
+              </span>   
+            </td>
+            <td *ngIf="project.projectAllocationBillabilityId !== billabilityId"> 
+                <span (click)="editProjectBilling(project.projectAllocationBillabilityId)">
+                  <i class="fa fa-pencil-square" aria-hidden="true"></i>Edit 
+                </span> 
+            </td>
+          </tr>
+        </tbody> 
+      </table>
+    </div>      
+  </div>    
+  <div class="box box-warning" *ngIf="isNewBillable">
+    <form class="form-horizontal" [formGroup]="newBillingForm">
+      <div class="box-header with-border">
+          <h3 class="box-title">New Billing Details</h3> 
+      </div>
+      <div class="box-body">
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="billability"> Billability: <i class="fa fa-asterisk"></i> </label> 
+          <div class="col-sm-4">
+            <select class="form-control" formControlName="billability">
+                <option value=''>Select</option>
+                <option value="Billable"> Billable</option>
+                <option value="Non-Billable"> Non-Billable </option>
+                <option value="Shadow"> Shadow </option>
+            </select>
+            <div class="error" *ngIf="newBillingForm.get('billability').hasError('required') && newBillingForm.get('billability').touched">
+                Required
+            </div>
+          </div>      
+        <label class="control-label col-sm-2" for="allocationStart"> Allocation Start: <i class="fa fa-asterisk"></i> </label> 
+          <div class="col-sm-4">
+              <input type="date" class="form-control" formControlName="billabilityStartDate">
+              <div class="error" *ngIf="newBillingForm.get('billabilityStartDate').hasError('required') && newBillingForm.get('billabilityStartDate').touched">
+                  Required
+              </div>
+          </div>
+      </div>
+      <div class="form-group">    
+        <label class="control-label col-sm-2" for="allocationEnd"> Allocation End: <i class="fa fa-asterisk"></i> </label> 
+          <div class="col-sm-4">
+              <input type="date" class="form-control" formControlName="billabilityEndDate"> 
+              <div class="error" *ngIf="newBillingForm.get('billabilityEndDate').hasError('required') && newBillingForm.get('billabilityEndDate').touched">
+                  Required
+              </div>
+              <div class="error" *ngIf="newBillingForm.hasError('dateError') && newBillingForm.get('billabilityEndDate').dirty">
+                  End date should not be grater than start date
+              </div>
+          </div>
+        <label class="control-label col-sm-2" for="ftecount"> FTE Count: <i class="fa fa-asterisk"></i> </label> 
+          <div class="col-sm-4">
+                <input type="number" class="form-control" formControlName="ftecount"> 
+                <div class="error" *ngIf="newBillingForm.get('ftecount').hasError('required') && newBillingForm.get('ftecount').touched">
+                    Required
+                </div>
+                <div class="error" *ngIf="(newBillingForm.get('ftecount').hasError('max') && newBillingForm.get('ftecount').dirty) || (newBillingForm.get('ftecount').hasError('min') && newBillingForm.get('ftecount').dirty)">
+                  Should be between 0.0 and 1.0
+              </div>
+          </div>
+      </div>  
+      <div class="form-group">
+         <div class="col-sm-9">                
+         </div>
+         <div class="col-sm-2">
+            <button 
+                type="button" 
+                class="btn btn-primary btn-block" 
+                (click)="saveNewProjectBilling(selectedProject.projectAllocationId)" 
+                [disabled]="!newBillingForm.valid"> Save </button>    
+         </div>
+         <div class="col-sm-1">                
+         </div>
+      </div>  
+    </div> 
+   </form>  
+  </div>     
+  <div class="modal-footer" style="padding-top: 0px; padding-bottom: 0px;"> 
+      <button type="button" class="btn btn-info" (click)="newProjectBilling()"> Add New </button>    
+      <button type="button" class="btn btn-info" data-dismiss="modal"> Back to Project Allocation </button>
+   </div>    
+  </div>
+  </div>
+ </div> 
+</div>
+<!-- </form> -->
+<!-- Modal Information : END-->
+
+
+<!-- New Allocation Modal Information : START-->
+<form class="form-horizontal" [formGroup]="newProjectAllocationForm">
+<div id="newAllocation" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:70%;">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="box box-warning">
+          <div class="box-header with-border">
+            <h3 class="box-title">New Allocation</h3> 
+          </div>
+          <div class="form-horizontal">
+          <div class="box-body">
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="projectCode"> Project Id: <i class="fa fa-asterisk"></i></label> 
+                <div class="col-sm-4">
+                  <select class="form-control" (change)="getProjectDetails($event.target.value)" formControlName="projectCode">
+                    <option value =''> Select </option>
+                    <option *ngFor="let project of projects" [disabled]="currentProjects.includes(project.id)" value={{project.id}} > 
+                      {{project.id}}
+                    </option>
+                  </select>
+                  <div class="error" *ngIf="newProjectAllocationForm.get('projectCode').hasError('required') && newProjectAllocationForm.get('projectCode').touched">
+                      Required
+                  </div>
+                </div>      
+              <label class="control-label col-sm-2" for="projectName"> Project Name: </label> 
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" formControlName="projectName">
+                </div>
+            </div>
+            <div class="form-group">    
+              <label class="control-label col-sm-2" for="allocationStart"> Allocation Start: <i class="fa fa-asterisk"></i></label> 
+                <div class="col-sm-4">
+                    <input type="date" class="form-control" formControlName="allocationStartDate">
+                    <div class="error" *ngIf="newProjectAllocationForm.get('allocationStartDate').hasError('required') && newProjectAllocationForm.get('allocationStartDate').touched">
+                        Required
+                    </div>
+                </div>
+              <label class="control-label col-sm-2" for="allocationEnd"> Allocation End: <i class="fa fa-asterisk"></i></label> 
+                <div class="col-sm-4">
+                    <input type="date" class="form-control" formControlName="allocationEndDate"> 
+                    <div class="error" *ngIf="newProjectAllocationForm.get('allocationEndDate').hasError('required') && newProjectAllocationForm.get('allocationEndDate').touched">
+                        Required
+                    </div>
+                    <div class="error" *ngIf="newProjectAllocationForm.hasError('dateError') && newProjectAllocationForm.get('allocationEndDate').dirty">
+                      Project end date should not be greater than start date
+                  </div>
+                </div>
+            </div>     
+          </div>
+        </div>
+        <div class="modal-footer" style="padding-top: 0px; padding-bottom: 0px;"> 
+          <button type="button" class="btn btn-info" data-dismiss="modal" (click)="newProjectAlocation()" [disabled]="!newProjectAllocationForm.valid"> Save </button>    
+          <button type="button" class="btn btn-info" data-dismiss="modal" (click)="resetNewAllocationForm()"> Cancel </button>
+        </div> 
+      </div>   
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+<!-- New Allocation Modal Information : END-->
+
