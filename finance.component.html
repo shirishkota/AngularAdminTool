@@ -1,0 +1,24 @@
+<section class="content-header">
+  <h1> Finance </h1>
+  <div class="row">
+    <ul class="nav nav-pills">
+      <li [routerLinkActive]="['active']">
+        <a routerLink="forecast-fin"> Forecast </a>
+      </li>
+      <li [routerLinkActive]="['active']">
+        <a routerLink="actuals-fin"> Actuals </a>
+      </li>
+      <li [routerLinkActive]="['active']">
+        <a routerLink="dashboard-fin"> Dashboard  </a>
+      </li>
+      <li [routerLinkActive]="['active']">
+        <a routerLink="admin-fin"> Admin </a>
+      </li>
+    </ul>
+  </div>
+  <div class="row">
+    <section class="content-header">
+      <router-outlet></router-outlet>
+    </section>
+  </div>
+</section>  

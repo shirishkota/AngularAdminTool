@@ -1,0 +1,27 @@
+<section class="content-header">
+  <h1> Employee Onboarding and Offboarding</h1>
+  <div class="row">
+    <ul class="nav nav-pills">
+      <li [routerLinkActive]="['active']">
+        <a [routerLink]="['summary']"> Info </a>
+      </li>
+      <li [routerLinkActive]="['active']">
+        <a [routerLink]="['employee']">Employee </a>
+      </li>
+      <li [routerLinkActive]="['active']">
+        <a [routerLink]="['onboarding']">Onboarding  </a>
+      </li>
+      <li [routerLinkActive]="['active']">
+        <a [routerLink]="['offboarding']">Off boarding </a>
+      </li>
+      <li [routerLinkActive]="['active']">
+        <a routerLink="viewReports">View & Report </a>
+      </li>
+    </ul>
+  </div>
+  <div class="row">
+    <section class="content-header">
+      <router-outlet></router-outlet>
+    </section>
+  </div>
+</section>  

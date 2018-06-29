@@ -1,0 +1,554 @@
+<div class="box box-warning">
+  <div class="box-header with-border">
+    <h3 class="box-title">DashBoard</h3>
+  </div>
+  <div class="box-body">
+    <form class="form-horizontal" [formGroup]="dashboardForm">
+      <div class="box-body">
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="lineOfBusiness"> Line of Business <i class="fa fa-asterisk"></i></label>
+          <div class="col-sm-10">
+            <select class="form-control" formControlName="lineOfBusiness" (change)="hideGraph()">
+              <option value=''> Select </option>
+              <option value='sfAccount'> SF Account </option>
+              <option value='fs'> FS </option>
+              <option value='ims'> IMS </option>
+              <option value='consulting'> Consulting </option>
+              <option value='bpo'> BPO </option>
+            </select>
+            <div class="error" *ngIf="dashboardForm.get('lineOfBusiness').hasError('required') && dashboardForm.get('lineOfBusiness').touched">
+              Required
+            </div>           
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="typeOfReport"> Type of Report <i class="fa fa-asterisk"></i> </label>
+          <div class="col-sm-10">
+           <select class="form-control" formControlName="typeOfReport" (change)="hideGraph()">
+              <option value=''> Select </option>
+              <option value='Actuals VS Forecast'> Actuals VS Forecast </option>
+              <option value='Periodic Actuals'> Periodic Actuals </option>     
+            </select>
+   
+            <div class="error" *ngIf="dashboardForm.get('typeOfReport').hasError('required') && dashboardForm.get('typeOfReport').touched">
+                Required
+              </div> 
+           </div> 
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="periodSelection"> Period Selection <i class="fa fa-asterisk"></i> </label>
+            <div class="col-sm-10" *ngIf="dashboardForm.get('typeOfReport').value =='Actuals VS Forecast'">
+                <select class="form-control" formControlName="periodSelection" (change)="hideGraph()" >
+                  <option value=''> Select </option>
+                  <option value='Monthly'> Monthly </option>
+                  <option value='Yearly'> Yearly </option>    
+                 </select>
+                <div class="error" *ngIf="dashboardForm.get('periodSelection').hasError('required') && dashboardForm.get('periodSelection').touched">
+                  Required
+                </div>
+             </div> 
+             
+             <div class="col-sm-10"  *ngIf="dashboardForm.get('typeOfReport').value == null || dashboardForm.get('typeOfReport').value=='' " >
+                <select class="form-control" formControlName="periodSelection" (change)="hideGraph()">
+                    <option value=''> Select </option>
+              </select>
+              <div class="error" *ngIf="dashboardForm.get('periodSelection').hasError('required') && dashboardForm.get('periodSelection').touched">
+                  Required
+                </div>
+             </div>
+            
+              <div class="col-sm-10" *ngIf="dashboardForm.get('typeOfReport').value=='Periodic Actuals'">
+                <select class="form-control" formControlName="periodSelection" (change)="hideGraph()">
+                    <option value=''> Select </option>
+                    <option value='Monthly'> Monthly </option>
+                    <option value='Quarterly'> Quarterly </option>    
+                    <option value='halfYearly'> Half-Yearly </option>   
+                 </select>
+              <div class="error" *ngIf="dashboardForm.get('periodSelection').hasError('required') && dashboardForm.get('periodSelection').touched">
+                  Required
+                </div>
+
+             </div> 
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="representationType"> Representation Type <i class="fa fa-asterisk"></i> </label>
+            <div class="col-sm-10" *ngIf="dashboardForm.get('typeOfReport').value !=='Actuals VS Forecast' || dashboardForm.get('periodSelection').value !=='Yearly'">
+              <select class="form-control" formControlName="representationType" (change)="hideGraph()">
+                <option value=''> Select </option>
+                <option value='Graph'> Graph </option>
+                <option value='Tabular'> Tabular </option>
+              </select>
+              <div class="error" *ngIf="dashboardForm.get('representationType').hasError('required') && dashboardForm.get('representationType').touched">
+                  Required
+                </div>
+            </div> 
+            <div class="col-sm-10" *ngIf="dashboardForm.get('typeOfReport').value =='Actuals VS Forecast' && dashboardForm.get('periodSelection').value =='Yearly'">
+                <select class="form-control" formControlName="representationType" (change)="hideGraph()">
+                  <option value=''> Select </option>
+                  <option value='Tabular'> Tabular </option>
+                </select>
+                <div class="error" *ngIf="dashboardForm.get('representationType').hasError('required') && dashboardForm.get('representationType').touched">
+                    Required
+                  </div>
+              </div> 
+          </div>
+          
+
+      </div>
+    </form>
+  </div>
+  <div class="box-footer">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-2">
+        <button type="submit" class="btn btn-primary btn-block" (click)="submitDashboardForm()"> Submit </button>
+    </div>
+    <div class="col-lg-2">
+        <a class="btn btn-default btn-block" (click) = "resetDashboardForm()"> Reset </a>
+    </div>
+    <div class="col-lg-2">
+        <a class="btn btn-default btn-block" routerLink="../reports"> Cancel </a>
+    </div>
+    <div class="col-lg-4"></div>
+  </div>
+</div>   
+
+
+<div *ngIf="showGraphAndReport">
+    <div class="row">
+      <div class="col-md-12" >
+       <!--   **************        ***********       **********   Graph Code Starts    **************        ***********       **********  -->
+
+        <!-- Graph for Monthly Actual Vs Forecast -->
+         <div *ngIf="dashboardForm.get('typeOfReport').value=='Actuals VS Forecast' &&  dashboardForm.get('periodSelection').value=='Monthly' && dashboardForm.get('representationType').value=='Graph'">
+          <div class="box box-info">
+             <div class="box-header with-border" >
+               <h3 class="box-title">{{dashboardForm.get('typeOfReport').value}}-{{dashboardForm.get('periodSelection').value}}</h3>
+        
+                  <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                  </div>
+              </div>
+          <div class="box-body" >
+            <div class="chart" *ngIf="mixedDatasets && mixedDatasets.length > 0">
+              <canvas baseChart class="chart"
+              [datasets]="mixedDatasets"
+              [labels]="mixedChartLabelsForMonthlyActuals"
+              [options]="options"
+              [chartType]="barChartType"
+              (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)"></canvas>
+            </div>
+            
+          </div>
+          <!-- /.box-body -->
+        </div> 
+      </div> 
+
+      
+
+       <!-- Graph for Monthly Periodic Actuals -->
+      <div *ngIf="dashboardForm.get('typeOfReport').value=='Periodic Actuals' && dashboardForm.get('periodSelection').value=='Monthly'&& dashboardForm.get('representationType').value=='Graph'">
+        <div class="box box-info">
+           <div class="box-header with-border" >
+             <h3 class="box-title">{{dashboardForm.get('typeOfReport').value}}-{{dashboardForm.get('periodSelection').value}}</h3>
+      
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+        <div class="box-body" >
+          <div class="chart">
+            <canvas baseChart class="chart" *ngIf="mixedDatasetForPeriodicActuals && mixedDatasetForPeriodicActuals.length > 0"
+            [datasets]="mixedDatasetForPeriodicActuals"
+            [labels]="mixedChartLabelsForMonthlyActuals"
+            [options]="options"
+            [chartType]="barChartType"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"></canvas>
+          </div>
+          
+        </div>
+        <!-- /.box-body -->
+      </div> 
+    </div> 
+
+
+    <!-- Graph for Quarterly Periodic Actuals -->
+    <div *ngIf="dashboardForm.get('typeOfReport').value=='Periodic Actuals' && dashboardForm.get('periodSelection').value=='Quarterly'&& dashboardForm.get('representationType').value=='Graph'">
+      <div class="box box-info">
+         <div class="box-header with-border" >
+           <h3 class="box-title">{{dashboardForm.get('typeOfReport').value}}-{{dashboardForm.get('periodSelection').value}}</h3>
+    
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+              </div>
+          </div>
+      <div class="box-body" >
+        <div class="chart">
+          <canvas baseChart class="chart" *ngIf="mixedDatasetForPeriodicActuals && mixedDatasetForPeriodicActuals.length > 0"
+          [datasets]="mixedDatasetForPeriodicActuals"
+          [labels]="mixedChartLabelsForQuarterlyActuals"
+          [options]="options"
+          [chartType]="barChartType"
+          (chartHover)="chartHovered($event)"
+          (chartClick)="chartClicked($event)"></canvas>
+        </div>
+        
+      </div>
+      <!-- /.box-body -->
+    </div> 
+  </div> 
+
+   <!-- Graph for Half Yearly Periodic Actuals -->
+  <div *ngIf="dashboardForm.get('typeOfReport').value=='Periodic Actuals' && dashboardForm.get('periodSelection').value=='halfYearly'&& dashboardForm.get('representationType').value=='Graph'">
+    <div class="box box-info">
+       <div class="box-header with-border" >
+         <h3 class="box-title">{{dashboardForm.get('typeOfReport').value}}-{{dashboardForm.get('periodSelection').value}}</h3>
+  
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+            </div>
+        </div>
+    <div class="box-body" >
+      <div class="chart">
+        <canvas baseChart class="chart" *ngIf="mixedDatasetForPeriodicActuals && mixedDatasetForPeriodicActuals.length > 0"
+        [datasets]="mixedDatasetForPeriodicActuals"
+        [labels]="mixedChartLabelsForHalfYearlyActuals"
+        [options]="options"
+        [chartType]="barChartType"
+        (chartHover)="chartHovered($event)"
+        (chartClick)="chartClicked($event)"></canvas>
+      </div>
+      
+    </div>
+    <!-- /.box-body -->
+  </div> 
+</div> 
+<!--       **************        ***********       **********       Graph Code Ends     **************        ***********       **********    -->
+ 
+<!--        **************        ***********       **********  Table Code Starts    **************        ***********       **********     -->
+
+ <!-- Table for Monthly Actuals VS Forecast  Starts-->
+<div *ngIf="dashboardForm.get('typeOfReport').value=='Actuals VS Forecast' && dashboardForm.get('periodSelection').value=='Monthly' && dashboardForm.get('representationType').value=='Tabular'">
+  <div class="box box-info" >
+     <div class="box-header with-border" >
+       <h3 class="box-title">{{dashboardForm.get('typeOfReport').value}}-{{dashboardForm.get('periodSelection').value}}</h3>
+
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+              </button>
+              <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          </div>
+      </div>
+      <div class="box box-danger">
+        <div class="box-body">
+          <table class="table table-hover table-bordered" >
+            <tr>
+              <th rowspan="2">Month</th>
+              <th colspan="2">Revenue</th>
+              <th colspan="2">CM%</th>
+            </tr>
+            <tr>
+                <th>Forecast</th>
+                <th>Actual</th>
+                <th>Forecast</th>
+                <th>Actual</th>
+            </tr>
+            <tbody>
+                <tr *ngFor="let data of forecastEntity; let index = index">  
+                    <td> {{getMonthFromDate(forecastEntity[index].forecastedMonth)}}</td>
+                    <td> {{forecastEntity[index].revenue | currency}}</td>
+                    <td> {{actualsEntity[index].revenue | currency}}</td>
+                    <td> {{forecastEntity[index].cmpercentage}} %</td>
+                    <td> {{actualsEntity[index].cmpercentage}} %</td>
+            </tr>           
+          </tbody>
+          <tr>
+            <td><b>Total</b></td>
+            <td><b>{{totalRevenueForecast | currency}}</b></td>
+            <td><b>{{totalRevenueActuals | currency}}</b></td>
+            <td><b>{{averageCMPerForecast}}%</b></td>
+            <td><b>{{averageCMPerActuals}}%</b></td>
+          </tr>
+          </table>
+        </div>
+      </div>
+  <!-- /.box-body -->
+</div> 
+</div> 
+ <!-- Table for Monthly Actuals VS Forecast  Ends-->
+
+  <!-- Table for Yearly Actuals VS Forecast  Starts-->
+
+<div *ngIf="dashboardForm.get('typeOfReport').value=='Actuals VS Forecast' && dashboardForm.get('periodSelection').value=='Yearly' && dashboardForm.get('representationType').value=='Tabular'">
+    <div class="box box-info">
+       <div class="box-header with-border" >
+         <h3 class="box-title">{{dashboardForm.get('typeOfReport').value}}-{{dashboardForm.get('periodSelection').value}}</h3>
+  
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+            </div>
+        </div>
+        <div class="box box-danger">
+          <div class="box-body">
+            <table class="table table-hover table-bordered">
+              <thead border = "1">
+                <th colspan="8">Revenue and CM%</th>
+                <tr>
+                  <th rowspan="2">Service Line</th>
+                  <th colspan="2">YTD</th>
+                  <th colspan="2">Forecast</th>
+                  <th colspan="2">2018</th>
+                </tr>
+                <tr>
+                    <th>Net Revenue</th>
+                    <th>CM %</th>
+                    <th>Net Revenue</th>
+                    <th>CM %</th>
+                    <th>Net Revenue</th>
+                    <th>CM %</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                    <td>FS Insurance</td>
+                    <td>{{yearlyForecastResult.lobWiseForecastReport.netRevenueForecastFS | currency}}</td>
+                    <td>{{yearlyForecastResult.lobWiseForecastReport.netCMPercentageForecastFS}}% </td>
+                    <td>{{yearlyForecastResult.lobWiseActualsReport.netRevenueActualsFS | currency}} </td>
+                    <td>{{yearlyForecastResult.lobWiseActualsReport.netCMPercentageActualsFS}}% </td>
+                    <td>{{yearlyForecastResult.lobwiseTotalReport.netRevenueTotalFS | currency}} </td>
+                    <td>{{yearlyForecastResult.lobwiseTotalReport.netCMPercentageTotalFS}}% </td>
+                </tr>
+
+                <tr>
+                    <td>IMS</td>
+                    <td>{{yearlyForecastResult.lobWiseForecastReport.netRevenueForecastIMS | currency}}</td>
+                    <td>{{yearlyForecastResult.lobWiseForecastReport.netCMPercentageForecastIMS}}% </td>
+                    <td>{{yearlyForecastResult.lobWiseActualsReport.netRevenueActualsIMS | currency}} </td>
+                    <td>{{yearlyForecastResult.lobWiseActualsReport.netCMPercentageActualsIMS}}% </td>
+                    <td>{{yearlyForecastResult.lobwiseTotalReport.netRevenueTotalIMS | currency}} </td>
+                    <td>{{yearlyForecastResult.lobwiseTotalReport.netCMPercentageTotalIMS}}%</td>
+                </tr>
+
+                <tr>
+                    <td>Consulting</td>
+                    <td>{{yearlyForecastResult.lobWiseForecastReport.netRevenueForecastConsulting | currency}}</td>
+                    <td>{{yearlyForecastResult.lobWiseForecastReport.netCMPercentageForecastConsulting}}%</td>
+                    <td>{{yearlyForecastResult.lobWiseActualsReport.netRevenueActualsConsulting | currency}} </td>
+                    <td>{{yearlyForecastResult.lobWiseActualsReport.netCMPercentageActualsConsulting}}%</td>
+                    <td>{{yearlyForecastResult.lobwiseTotalReport.netRevenueTotalConsulting | currency}} </td>
+                    <td>{{yearlyForecastResult.lobwiseTotalReport.netCMPercentageTotalConsulting}}%</td>
+                </tr>
+
+                <tr>
+                    <td>BPO</td>
+                    <td>{{yearlyForecastResult.lobWiseForecastReport.netRevenueForecastBPO | currency}}</td>
+                    <td>{{yearlyForecastResult.lobWiseForecastReport.netCMPercentageForecastBPO}}% </td>
+                    <td>{{yearlyForecastResult.lobWiseActualsReport.netRevenueActualsBPO | currency}} </td>                
+                    <td>{{yearlyForecastResult.lobWiseActualsReport.netCMPercentageActualsBPO}}% </td>
+                    <td>{{yearlyForecastResult.lobwiseTotalReport.netRevenueTotalBPO | currency}} </td>
+                    <td>{{yearlyForecastResult.lobwiseTotalReport.netCMPercentageTotalBPO}}% </td>
+                </tr>
+
+                <tr>
+                    <td><b>Statefarm Account</b></td>
+                    <td><b>{{yearlyForecastResult.lobWiseForecastReport.totalRevenueForecastYearly | currency}}</b></td>
+                    <td><b>{{yearlyForecastResult.lobWiseForecastReport.netCMPercentageForecastYearly}}% </b></td>
+                    <td><b>{{yearlyForecastResult.lobWiseActualsReport.totalRevenueActualsYearly | currency}} </b></td>               
+                    <td><b>{{yearlyForecastResult.lobWiseActualsReport.netCMPercentageActualsYearly}}% </b></td>
+                    <td><b>{{yearlyForecastResult.lobwiseTotalReport.totalRevenueTotalYearly | currency}} </b></td>
+                    <td><b>{{yearlyForecastResult.lobwiseTotalReport.netCMPercentageTotalYearly}}% </b></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+    <!-- /.box-body -->
+  </div> 
+  </div>
+
+  <!-- Table for Yearly Actuals VS Forecast  Ends-->
+
+  <!-- Table for Monthly Periodic Actuals Starts-->
+
+  <div *ngIf="dashboardForm.get('typeOfReport').value=='Periodic Actuals' && dashboardForm.get('periodSelection').value=='Monthly' && dashboardForm.get('representationType').value=='Tabular'">
+      <div class="box box-info">
+         <div class="box-header with-border" >
+           <h3 class="box-title">{{dashboardForm.get('typeOfReport').value}}-{{dashboardForm.get('periodSelection').value}}</h3>
+    
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+              </div>
+          </div>
+          <div class="box box-danger">
+            <div class="box-body">
+              <table class="table table-hover table-bordered">
+                
+                <tr>
+                  <th></th>
+                    <th>Net Revenue</th>
+                    <th>Cost</th>
+                    <th>CM%</th>
+                </tr>
+
+                <tbody *ngFor="let actualEntity of actualsEntities">
+                  <tr>
+                    <td>{{ getMonthFromDate(actualEntity.actualsForMonth) }}</td>
+                    <td>{{actualEntity.revenue | currency}}</td>
+                    <td>{{actualEntity.cost | currency}}</td>
+                    <td>{{actualEntity.cmpercentage}}%</td>
+                  </tr>
+                </tbody>
+                <tr>
+                  <td><b>Total</b></td>
+                  <td><b>{{totalNetRevenue | currency}}</b></td>
+                  <td><b>{{totalCost | currency}}</b></td>
+                  <td><b>{{averageCMPercentage}}%</b></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+      <!-- /.box-body -->
+    </div> 
+    </div>
+
+
+    <!-- Table for Monthly Periodic Actuals Ends-->
+
+     <!-- Table for Quarterly Periodic Actuals Starts-->
+    
+    <div *ngIf="dashboardForm.get('typeOfReport').value=='Periodic Actuals' && dashboardForm.get('periodSelection').value=='Quarterly' && dashboardForm.get('representationType').value=='Tabular'">
+        <div class="box box-info">
+           <div class="box-header with-border" >
+             <h3 class="box-title">{{dashboardForm.get('typeOfReport').value}}-{{dashboardForm.get('periodSelection').value}}</h3>
+      
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div class="box box-danger">
+              <div class="box-body">
+                <table class="table table-hover table-bordered">
+                  
+                  <tr>
+                    <th></th>
+                      <th>Net Revenue</th>
+                      <th>Cost</th>
+                      <th>CM%</th>
+                  </tr>
+
+                  <tbody>
+                      <tr>
+                        <td>Q1</td>
+                        <td>{{quarterOneNetRevenue | currency}}</td>
+                        <td>{{quarterOneCost | currency}}</td>
+                        <td>{{quarterOneAverageCMPercentage}}%</td>
+                      </tr>
+                      <tr>
+                          <td>Q2</td>
+                          <td>{{quarterTwoNetRevenue | currency}}</td>
+                          <td>{{quarterTwoCost | currency}}</td>
+                          <td>{{quarterTwoAverageCMPercentage}}%</td>
+                        </tr>
+                        <tr>
+                            <td>Q3</td>
+                            <td>{{quarterThreeNetRevenue | currency}}</td>
+                            <td>{{quarterThreeCost | currency}}</td>
+                            <td>{{quarterThreeAverageCMPercentage}}%</td>
+                        </tr>
+                        <tr>
+                            <td>Q4</td>
+                            <td>{{quarterFourNetRevenue | currency}}</td>
+                            <td>{{quarterFourCost | currency}}</td>
+                            <td>{{quarterFourAverageCMPercentage}}%</td>
+                          </tr>
+                    </tbody>
+                    <tr>
+                      <td><b>Total</b></td>
+                      <td><b>{{totalNetRevenue | currency}}</b></td>
+                      <td><b>{{totalCost | currency}}</b></td>
+                      <td><b>{{averageCMPercentage}}%</b></td>
+                    </tr>
+                </table>
+              </div>
+            </div>
+        <!-- /.box-body -->
+      </div> 
+      </div>
+
+      <!-- Table for Quarterly Periodic Actuals Ends-->
+
+      <!-- Table for halfYearly Periodic Actuals Starts-->
+
+      <div *ngIf="dashboardForm.get('typeOfReport').value=='Periodic Actuals' && dashboardForm.get('periodSelection').value=='halfYearly' && dashboardForm.get('representationType').value=='Tabular'">
+          <div class="box box-info">
+             <div class="box-header with-border" >
+               <h3 class="box-title">{{dashboardForm.get('typeOfReport').value}}-{{dashboardForm.get('periodSelection').value}}</h3>
+        
+                  <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                  </div>
+              </div>
+              <div class="box box-danger">
+                <div class="box-body">
+                  <table class="table table-hover table-bordered">
+                    
+                    <tr>
+                      <th></th>
+                        <th>Net Revenue</th>
+                        <th>Cost</th>
+                        <th>CM%</th>   
+                    </tr>
+                   
+                      <tbody>
+                      <tr>
+                        <td>H1</td>
+                        <td>{{halfYearOneNetRevenue | currency}}</td>
+                        <td>{{halfYearOneCost | currency}}</td>
+                        <td>{{halfYearOneAverageCMPercentage}}%</td>
+                      </tr>
+                      <tr>
+                          <td>H2</td>
+                          <td>{{halfYearTwoNetRevenue | currency}}</td>
+                          <td>{{halfYearTwoCost | currency}}</td>
+                          <td>{{halfYearTwoAverageCMPercentage}}%</td>
+                        </tr>
+                    </tbody>
+                    <tr>
+                      <td><b>Total</b></td>
+                      <td><b>{{totalNetRevenue | currency}}</b></td>
+                      <td><b>{{totalCost | currency}}</b></td>
+                      <td><b>{{averageCMPercentage}}%</b></td>
+                    </tr>
+                
+                
+                  </table>
+                </div>
+              </div>
+          <!-- /.box-body -->
+        </div> 
+        </div>
+        
+      <!-- Table for halfYearly Periodic Actuals Starts-->
+
+      </div>
+      
+    </div>
+  </div>
+

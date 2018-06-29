@@ -1,0 +1,57 @@
+<div class="box box-warning">
+  <div class="box-header with-border">
+    <h3 class="box-title">Forecast Submission</h3>
+  </div>
+  <div class="box-body">
+    <form class="form-horizontal" [formGroup]="forecastForm">
+      <div class="box-body">
+        
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="forecastAttachment"> Forecast Attachment <i class="fa fa-asterisk"></i> </label>
+          <div class="col-sm-10">
+            <input type="file" (change)="onFileChange($event)" accept=".xlsx, .xls" #fileInput/>
+            <div class="error" *ngIf="forecastForm.get('forecastAttachment').hasError('required') && forecastForm.get('forecastAttachment').touched">
+              Required
+            </div>
+          </div> 
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="forecastMonth"> Forecasting Month <i class="fa fa-asterisk"></i></label>
+            <div class="col-sm-10">
+              <select class="form-control" formControlName="forecastMonth">
+                <option value=''>Select Month</option>
+                <option value='1'>Janaury</option>
+                <option value='2'>February</option>
+                <option value='3'>March</option>
+                <option value='4'>April</option>
+                <option value='5'>May</option>
+                <option value='6'>June</option>
+                <option value='7'>July</option>
+                <option value='8'>August</option>
+                <option value='9'>September</option>
+                <option value='10'>October</option>
+                <option value='11'>November</option>
+                <option value='12'>December</option>
+              </select> 
+               <div class="error" *ngIf="forecastForm.get('forecastMonth').hasError('required') && forecastForm.get('forecastMonth').touched">
+                Required
+              </div>   
+            </div>
+          </div>
+      </div>
+    </form>
+  </div>
+  <div class="box-footer">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-2">
+        <button type="submit" class="btn btn-primary btn-block" (click)="submitForecastForm()"> Submit </button>
+    </div>
+    <div class="col-lg-2">
+        <a class="btn btn-default btn-block" (click)="restForm()"> Reset </a>
+    </div>
+    <div class="col-lg-2">
+        <a class="btn btn-default btn-block" routerLink="../reports"> Cancel </a>
+    </div>
+    <div class="col-lg-4"></div>
+  </div>
+</div>   

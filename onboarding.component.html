@@ -1,0 +1,487 @@
+
+<form class="form-horizontal" [formGroup]="onboardingForm">
+    <!-- Employee Information: START-->
+    <div class="box box-warning">
+      <div class="box-header with-border">
+        <h3 class="box-title">Employee Information</h3>
+      </div>
+      <div class="box-body">
+        <div class="col-lg-12">
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="firstName"> Kin Id  <i class="fa fa-asterisk"></i></label>
+              <input type="text"  class="form-control" formControlName="kinId" (focusout)="getEmployeeById(onboardingForm.value.kinId)">
+              <div class="error" *ngIf="onboardingForm.get('kinId').hasError('required') && onboardingForm.get('kinId').touched">
+                Required
+              </div>
+              <div class="error" *ngIf="onboardingForm.get('kinId').hasError('pattern') && onboardingForm.get('kinId').touched">
+                Invalid input
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="firstName"> First Name </label>
+              <input type="text"  class="form-control" formControlName="firstName">
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="lastName"> Last Name </label>
+              <input type="text"  class="form-control" formControlName="lastName">
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="capBU">	Cap BU </label>
+              <input type="text"  class="form-control" formControlName="capBU">
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-12">
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="designation"> Designation </label>
+              <input type="text"  class="form-control" formControlName="designation">
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="emailId"> E-mail ID </label>
+              <input type="email" disabled=true class="form-control" formControlName="emailId">
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="phoneNo"> Phone</label>
+              <input type="text"  class="form-control" formControlName="mobile">
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="skillSet"> Skill set </label>
+              <input type="text"  class="form-control" formControlName="skillSet">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Employee Information: END-->
+    <!-- ODC Details: START-->
+    <div class="box box-warning">
+      <div class="box-header with-border">
+        <h3 class="box-title">ODC Details</h3>
+      </div>
+      <div class="box-body">
+        <div class="col-lg-12">
+          <div class="col-lg-2">
+            <div class="form-group">
+              <label for="odcStartDate">Start date<i class="fa fa-asterisk"></i> </label>
+              <input type="date" class="form-control" formControlName="odcStartDate">
+              <div class="error" *ngIf="onboardingForm.get('odcStartDate').hasError('required') && onboardingForm.get('odcStartDate').touched">
+                Required
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2">
+            <div class="form-group">
+              <label for="location"> Location </label>
+                <!-- <app-select-data [displayValues]="locations" (selectedValue)="selectLocation($event)"></app-select-data> -->
+                <select class="form-control" formControlName="location">
+                    <option value =''> Select </option>
+                    <option *ngFor="let location of locations" value={{location.displayName}} > 
+                      {{location.displayName}} 
+                    </option>
+                  </select>
+            </div>
+          </div>
+          <div class="col-lg-2">
+            <div class="form-group">
+              <label for="alias"> Alias </label>
+              <input type="text" class="form-control" formControlName="alias">
+            <div class="error" *ngIf="onboardingForm.get('alias').hasError('pattern') && onboardingForm.get('alias').touched">
+                Please enter valid alias not more than 4 characters
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="additionReason"> Reason for addition <i class="fa fa-asterisk"></i></label>
+              <select class="form-control" formControlName="additionReason">
+                  <option value =''> Select </option>
+                  <option *ngFor="let reasonForAddition of reasonsForAddition" value={{reasonForAddition.displayName}} > 
+                      {{reasonForAddition.displayName}} 
+                    </option>
+                </select> 
+              <div class="error" *ngIf="onboardingForm.get('additionReason').hasError('required') && onboardingForm.get('additionReason').touched">
+                  Required
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="srsTicketNoNonOprId">NON-OPR Ticket No <i class="fa fa-asterisk"></i></label>
+              <input type="text" class="form-control" formControlName="srsTicketNoNonOprId">
+              <div class="error" *ngIf="onboardingForm.get('srsTicketNoNonOprId').hasError('required') && onboardingForm.get('srsTicketNoNonOprId').touched">
+                  Required
+              </div>
+            </div>
+          </div> 
+		    </div>
+        <div class="col-lg-12">
+            <div class="col-lg-2">
+                <div class="form-group">
+                  <label for="alias"> NON-OPR Ticket Date <i class="fa fa-asterisk"></i></label>
+                  <input type="date" class="form-control" formControlName="srsTicketDate">
+                  <div class="error" *ngIf="onboardingForm.get('srsTicketDate').hasError('required') && onboardingForm.get('srsTicketDate').touched">
+                      Required
+                  </div>
+               </div>
+             </div> 
+          <div class="col-lg-2">
+            <div class="form-group">
+              <label for="esSponsor"> ES Sponsor  <i class="fa fa-asterisk"></i> </label>
+              <input type="text" class="form-control" formControlName="esSponsor">
+              <div class="error" *ngIf="onboardingForm.get('esSponsor').hasError('required') && onboardingForm.get('esSponsor').touched">
+                  Required
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2">
+            <div class="form-group">
+              <label for="tokenId">MFA Token </label>
+              <input type="text" class="form-control" formControlName="tokenId">
+            </div>
+          </div>
+          <div class="col-lg-3">
+              <div class="form-group">
+                <label for="tokenId">MFA Token Issued Date </label>
+                <input type="date" class="form-control" formControlName="tokenIdIssuedDate">
+              </div>
+          </div>   
+          <div class="col-lg-3">
+              <div class="form-group">
+                <label for="physicalOdcAccessDate">Physical Access Date</label>
+                <input type="date" class="form-control" formControlName="physicalOdcAccessDate">
+              </div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="col-lg-3">
+                <div class="form-group">
+                  <label for="odcAccessEvidance"> ODC Access Evidence <i class="fa fa-asterisk"></i> </label>
+                  <input type="text" class="form-control" formControlName="odcAccessEvidance">
+                  <div class="error" *ngIf="onboardingForm.get('odcAccessEvidance').hasError('required') && onboardingForm.get('odcAccessEvidance').touched">
+                      Required
+                </div>
+                <a href="https://troom.capgemini.com/sites/SFAccount/Shared%20Documents/Forms/AllItems.aspx?RootFolder=%2Fsites%2FSFAccount%2FShared%20Documents%2F6%2EAUDITS%20READINESS%2FON%2DOFF%20BOARDING&View={A765B248-0571-4C7C-936A-40404DD0256E}&InitialTabId=Ribbon%2EDocument&VisibilityContext=WSSTabPersistence" target="_blank"> Sharepoint link to upload evidence </a>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <label for="odcAccessEvidance"> NDA evidence <i class="fa fa-asterisk"></i> </label>
+                  <input type="text" class="form-control" formControlName="odcNdaFormSignedEvidence">
+                  <div class="error" *ngIf="onboardingForm.get('odcNdaFormSignedEvidence').hasError('required') && onboardingForm.get('odcNdaFormSignedEvidence').touched">
+                      Required
+                </div>
+                <a href="https://troom.capgemini.com/sites/SFAccount/Shared%20Documents/Forms/AllItems.aspx?RootFolder=%2Fsites%2FSFAccount%2FShared%20Documents%2F6%2EAUDITS%20READINESS%2FON%2DOFF%20BOARDING&View={A765B248-0571-4C7C-936A-40404DD0256E}&InitialTabId=Ribbon%2EDocument&VisibilityContext=WSSTabPersistence" target="_blank"> Sharepoint link to upload evidence </a>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <label for="odcAccessEvidance"> SAA evidence <i class="fa fa-asterisk"></i> </label>
+                  <input type="text" class="form-control" formControlName="odcSaaFormSignedEvidence">
+                  <div class="error" *ngIf="onboardingForm.get('odcSaaFormSignedEvidence').hasError('required') && onboardingForm.get('odcSaaFormSignedEvidence').touched">
+                      Required
+                </div>
+                <a href="https://troom.capgemini.com/sites/SFAccount/Shared%20Documents/Forms/AllItems.aspx?RootFolder=%2Fsites%2FSFAccount%2FShared%20Documents%2F6%2EAUDITS%20READINESS%2FON%2DOFF%20BOARDING&View={A765B248-0571-4C7C-936A-40404DD0256E}&InitialTabId=Ribbon%2EDocument&VisibilityContext=WSSTabPersistence" target="_blank"> Sharepoint link to upload evidence </a>
+                </div>
+              </div> 
+              <div class="col-lg-2">
+                  <div class="form-group">
+                    <label for="sfOnboardInventory "> Updated Inventory </label>
+                    <input type="checkbox" class="checkbox"  formControlName="sfOnboardInventory"> 
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+    <!-- ODC Details: END-->
+    <!-- Project Information: START-->
+    <div class="box box-warning">
+      <div class="box-header with-border">
+        <h3 class="box-title">Project Information</h3>
+      </div>
+      <div class="box-body">
+        <div class="col-lg-12">
+          <div class="col-lg-2">
+            <div class="form-group" tabindex="-1">
+              <label for="projectId">	Project ID <i class="fa fa-asterisk"></i></label>
+              <!-- <app-select-data [displayValues]="projects" (selectedValue)="selectProject($event)"></app-select-data> -->
+              <select class="form-control" (change)="getProjectDetails($event.target.value)" formControlName="projectId">
+                <option value =''> Select </option>
+                <option *ngFor="let project of projects" value={{project.id}} > 
+                  {{project.id}}
+                </option>
+              </select>
+              <div class="error" *ngIf="onboardingForm.get('projectId').hasError('required') && onboardingForm.get('projectId').touched">
+                  Required
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2">
+            <div class="form-group">
+              <label for="projectDesc"> Project Name </label>
+              <input type="text" class="form-control" formControlName="projectDesc">
+            </div>
+          </div>
+          <div class="col-lg-2">
+            <div class="form-group">
+              <label for="capgeminiManager"> Capgemini Manager </label>
+              <input type="text" class="form-control" formControlName="capgeminiManager">
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="expectedBillingDate">	Expected billing Date  <i class="fa fa-asterisk"></i></label>
+              <input type="date" class="form-control" formControlName="expectedBillingDate">
+              <div class="error" *ngIf="onboardingForm.get('expectedBillingDate').hasError('required') && onboardingForm.get('expectedBillingDate').touched">
+                  Required
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="actualBillingDate"> Release/Component </label>
+              <input type="text" class="form-control" formControlName="releaseComponent">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="workArea"> Work Area </label>
+              <input type="text" class="form-control" formControlName="workArea">
+                <div class="error" *ngIf="onboardingForm.get('workArea').hasError('pattern') && onboardingForm.get('workArea').touched">
+                  Invalid input
+                </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="functions">	Function </label>
+              <input type="text" class="form-control" formControlName="functions">
+                <div class="error" *ngIf="onboardingForm.get('functions').hasError('pattern') && onboardingForm.get('functions').touched">
+                  Invalid input
+                </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="workOrder"> Work Order </label>
+              <input type="text" class="form-control" formControlName="workOrder">
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="sfManager">	SF Manager  </label>
+              <input type="text" class="form-control" formControlName="sfManager">
+                <div class="error" *ngIf="onboardingForm.get('sfManager').hasError('pattern') && onboardingForm.get('sfManager').touched">
+                  Invalid input
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="box-footer">
+        <button type="submit" 
+            class="btn btn-primary" 
+            data-keyboard="false" 
+            data-toggle="modal"
+            data-target="#myModal"
+            [disabled]="!onboardingForm.valid"
+            >Submit
+        </button>
+      </div>
+    </div>
+    <!-- Project Information: END data-backdrop="static" -->   
+  </form>   
+  
+<!-- Modal --> 
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog box-warning" style="width:1250px;">
+    <!-- Modal content-->
+    <div class="modal-content">
+    <div class="modal-body">
+    <!-- Employee Information popup: START-->  
+    <div class="box box-warning">
+      <div class="box-header with-border">
+        <h3 class="box-title">Employee Information</h3>
+      </div>
+      <div class="box-body">
+        <div class="col-lg-12">
+          <div class="col-lg-3">
+            <label> Kin Id :</label>
+            <span>{{this.onboardingForm.get('kinId').value}}</span>
+          </div>
+          <div class="col-lg-3">
+            <label> First Name :</label>
+            <span>{{this.onboardingForm.get('firstName').value}}</span>
+          </div>
+          <div class="col-lg-3">
+            <label> Last Name :</label>
+            <span>{{this.onboardingForm.get('lastName').value}}</span>
+          </div>
+          <div class="col-lg-3">
+            <label>	Cap BU :</label>
+            <span>{{this.onboardingForm.get('capBU').value}}</span>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="col-lg-3">
+            <label> Designations :</label>
+            <span>{{this.onboardingForm.get('designation').value}}</span>
+          </div>
+          <div class="col-lg-3">
+            <label> Email Id :</label>
+            <span>{{this.onboardingForm.get('emailId').value}}</span>
+          </div>
+          <div class="col-lg-3">
+            <label> Phone No :</label>
+            <span>{{this.onboardingForm.get('mobile').value}}</span>
+          </div>
+          <div class="col-lg-3">
+            <label>	Skill Set :</label>
+            <span>{{this.onboardingForm.get('skillSet').value}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Employee Information popup: END-->  
+    <!-- ODC Details Popup: START -->
+    <div class="box box-warning">
+      <div class="box-header with-border">
+        <h3 class="box-title">ODC Details</h3>
+      </div>
+      <div class="box-body">
+      <div class="col-lg-12">
+        <div class="col-lg-2">
+          <label for="odcStartDate">Start date :</label>
+          <span>{{this.onboardingForm.get('odcStartDate').value}}</span>   
+        </div>
+        <div class="col-lg-2">
+          <label for="location"> Location :</label>
+          <span>{{this.onboardingForm.get('location').value}}</span>
+       </div>
+        <div class="col-lg-2">
+          <label for="alias"> Alias :</label>
+          <span>{{this.onboardingForm.get('alias').value}}</span>
+        </div>
+        <div class="col-lg-3">
+          <label for="additionReason"> Reason for addition :</label> 
+          <span>{{this.onboardingForm.get('additionReason').value}}</span>           
+        </div>
+        <div class="col-lg-3">
+          <label for="srsTicketNoNonOprId">NON-OPR TikcetNo :</label>
+          <span>{{this.onboardingForm.get('srsTicketNoNonOprId').value}}</span>
+        </div> 
+      </div>
+      <div class="col-lg-12">
+        <div class="col-lg-2">
+            <label for="alias"> NON-OPR Ticket Date :</label> 
+            <span>{{this.onboardingForm.get('srsTicketDate').value}}</span>              
+        </div> 
+        <div class="col-lg-2">
+          <label for="esSponsor"> ES Sponsor :</label>
+          <span>{{this.onboardingForm.get('esSponsor').value}}</span>
+        </div>
+        <div class="col-lg-2">
+          <label for="tokenId">MFA Token :</label>
+          <span>{{this.onboardingForm.get('tokenId').value}}</span>
+        </div>
+        <div class="col-lg-3">
+          <label for="tokenId">MFA Token Issued Date :</label>
+          <span>{{this.onboardingForm.get('tokenIdIssuedDate').value}}</span>
+        </div>   
+        <div class="col-lg-3">
+          <label for="physicalOdcAccessDate">Physical Access Date :</label>
+          <span>{{this.onboardingForm.get('physicalOdcAccessDate').value}}</span>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="col-lg-2">
+         <label for="odcAccessEvidance"> ODC Access Evidence :</label>
+         <span>{{this.onboardingForm.get('odcAccessEvidance').value}}</span>
+        </div>
+        <div class="col-lg-2">
+          <label for="odcNdaFormSignedEvidence"> Undertaking Signed  :</label>
+          <span>{{this.onboardingForm.get('odcNdaFormSignedEvidence').value}}</span>
+        </div>
+        <div class="col-lg-2">
+          <label> Updated Inventory :</label>
+          <span>{{this.onboardingForm.get('sfOnboardInventory').value}}</span>
+        </div>
+      </div>
+    </div>
+    </div>
+    <!-- ODC Details popup: END--> 
+    <!-- Project Information popup: START-->  
+    <div class="box box-warning">
+        <div class="box-header with-border">
+          <h3 class="box-title">Project Information</h3>
+        </div>
+        <div class="box-body">
+          <div class="col-lg-12">
+            <div class="col-lg-2">
+              <label>Project Id :</label>
+              <span>{{this.onboardingForm.get('projectId').value}}</span>
+            </div>
+            <div class="col-lg-2">
+              <label>Project Name :</label>
+              <span>{{this.onboardingForm.get('projectDesc').value}}</span>
+            </div>
+            <div class="col-lg-2">
+              <label>Capgemini Manager :</label>
+              <span>{{this.onboardingForm.get('capgeminiManager').value}}</span>
+            </div>
+            <div class="col-lg-3">
+              <label>Expected billing Date :</label>
+              <span>{{this.onboardingForm.get('expectedBillingDate').value}}</span>
+            </div>
+            <div class="col-lg-3">
+                <label> Release/Component :</label>
+                <span>{{this.onboardingForm.get('releaseComponent').value}}</span>
+              </div>
+          </div>
+          <div class="col-lg-12">
+            <div class="col-lg-3">
+              <label> Work Area :</label>
+              <span>{{this.onboardingForm.get('workArea').value}}</span>
+            </div>
+            <div class="col-lg-3">
+              <label> Function :</label>
+              <span>{{this.onboardingForm.get('functions').value}}</span>
+            </div>
+            <div class="col-lg-3">
+              <label>	WorkOrder :</label>
+              <span>{{this.onboardingForm.get('workOrder').value}}</span>
+            </div>
+            <div class="col-lg-3">
+              <label>	SF Manager :</label>
+              <span>{{this.onboardingForm.get('sfManager').value}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Project Information popup: END-->    
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onBoardingSubmit()"> Onboard </button>
+        <button type="button" class="btn btn-info" data-dismiss="modal"> Cancel </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+  

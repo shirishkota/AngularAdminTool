@@ -1,0 +1,298 @@
+<div class="box box-warning">
+    <div class="col-lg-12"> <br/>
+      <span class="col-lg-4"></span>
+      <span class="col-lg-2">
+        <label><input type="radio" (click)="SearchByCriteria('date')" name="searchBy" [checked]="searchBy === 'date'">Search By Date</label>
+      </span>
+      <span class="col-lg-2">
+        <label><input type="radio" (click)="SearchByCriteria('name')" name="searchBy" [checked]="searchBy === 'name'">Search By Name</label><br/>
+      </span>
+      <span class="col-lg-4"></span><br/>
+    </div>
+    <div *ngIf="searchBy === 'name'">
+      <form class="form-horizontal" [formGroup]="reportNameForm">
+        <div class="">
+          <div class="box-body">
+            <div class="col-lg-12">
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label for="reportType"> Kin Id </label>
+                <input type="text" class="form-control" formControlName="kinId">
+                <div class="error" *ngIf="reportNameForm.get('kinId').hasError('pattern') && reportNameForm.get('kinId').touched">
+                  Please enter valid KIN Id
+                </div>
+              </div>
+            </div>  
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label for="startDate"> First Name</label>
+                <input type="text" class="form-control" formControlName="firstName">
+                <div class="error" *ngIf="reportNameForm.get('firstName').hasError('pattern') && reportNameForm.get('firstName').touched">
+                  Please enter valid KIN Id
+                </div>
+              </div>
+            </div> 
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label for="endDate"> Last Name</label>
+                <input type="text" class="form-control" formControlName="lastName">
+                <div class="error" *ngIf="reportNameForm.get('lastName').hasError('pattern') && reportNameForm.get('lastName').touched">
+                  Please enter valid KIN Id
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                  <label for="reportType"> Report Type <i class="fa fa-asterisk"></i></label>
+                  <select class="form-control" formControlName="reportType">
+                    <option value="onboarding"> Onboarding </option>
+                    <option value="offboarding"> Off-boarding </option>
+                  </select>
+                  <div class="error" *ngIf="reportNameForm.get('reportType').hasError('pattern') && reportNameForm.get('reportType').touched">
+                      Please select Report type
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="box-footer clearfix">
+              <div class="row">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-2">
+                  <button type="button" class="btn btn-primary btn-block" (click)="searchNamePerform()" >Search</button>
+                </div>
+                <div class="col-lg-2">
+                  <button type="button" class="btn btn-success btn-block" (click)="resetNameForm()">Clear</button>
+                </div>
+                <div class="col-lg-2">
+                  <button type="button" class="btn btn-default btn-block" routerLink="../summary">Cancel</button>
+                </div>
+                <div class="col-lg-3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div *ngIf="searchBy === 'date'">
+      <form class="form-horizontal" [formGroup]="reportForm">
+        <div class="">
+          <div class="box-body">
+            <div class="col-lg-12">
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <label for="startDate"> Start Date <i class="fa fa-asterisk"></i></label>
+                  <input type="date" class="form-control" formControlName="startDate">
+                  <div class="error" *ngIf="reportForm.get('startDate').hasError('required') && reportForm.get('startDate').touched">
+                    Required
+                  </div>
+                </div>
+              </div> 
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <label for="endDate"> End Date <i class="fa fa-asterisk"></i></label>
+                  <input type="date" class="form-control" formControlName="endDate">
+                  <div class="error" *ngIf="reportForm.get('endDate').hasError('required') && reportForm.get('endDate').touched">
+                    Required
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <label for="reportType"> Report Type <i class="fa fa-asterisk"></i></label>
+                  <select class="form-control" formControlName="reportType">
+                    <option value="onboarding"> Onboarding </option>
+                    <option value="offboarding"> Off-boarding </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <label for="reportType"> Location </label>
+                  <select class="form-control" formControlName="location">
+                    <option value="all"> All </option>
+                    <option value="Pune"> Pune </option>
+                    <option value="Hyderabad"> Hyderabad </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="box-footer clearfix">
+            <div class="row">
+              <div class="col-lg-3"></div>
+              <div class="col-lg-2">
+                <button type="button" class="btn btn-primary btn-block" (click)="searchPerform()" >Search</button>
+              </div>
+              <div class="col-lg-2">
+                <button type="button" class="btn btn-success btn-block" (click)="resetForm()">Clear</button>
+              </div>
+              <div class="col-lg-2">
+                <button type="button" class="btn btn-default btn-block" routerLink="../summary">Cancel</button>
+              </div>
+              <div class="col-lg-3"></div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+</div>
+
+  
+    <div *ngIf="searchResult.length > 0 && report=== 'onboarding'">
+      <div class="row">
+        <div class="col-lg-2" style="padding-bottom:5px">
+          <a type="button" href="#" (click)="employeeExportToExcel('employeeExport')" download="Employee_List" class="btn btn-warning"> 
+            Export to Excel 
+          </a>
+        </div> 
+      </div>
+      <div class="box box-warning">
+        <div class="box-body" style="overflow:auto;max-height:300px">
+          <table id="employeeExport" class="table table-hover table-bordered">
+            <thead>
+              <tr>
+                <th> Emp_Id </th>
+                <th> Emp_Name </th>
+                <th> Cap_BU </th>
+                <th> Designation </th>
+                <th> Capgemini Email Id </th>
+                <th> Contact No </th>
+                <th> SkillSet </th>
+                <th> ODC Start date </th>
+                <th> Location </th>
+                <th> Alias </th>
+                <th >Reason For addition </th>
+                <th> SRSTicketNo (For non opr) </th>
+                <th> SRSTicketDate (For non opr) </th>
+                <th> External Staff spons </th>
+                <th> MFA Token </th>
+                <th> MFA Token Issued Date </th>
+                <th> Physical Access Date </th>
+                <th> ODC Access Evidence  </th>
+                <th> Undertaking form signed </th>
+                <th> Inventry updated </th>
+                <th> Project ID </th>
+                <th> Project Name </th>
+                <th> Capgemini Manager </th>
+                <th> Expected Billing Start Date </th>
+                <th> Bill/Non-bill </th>
+                <th> Release/Component </th>
+                <th> WorkOrder Number </th>
+                <th> SF Manager </th>
+                <th> WorkArea </th>
+                <th> Function </th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let employee of searchResult">
+              <tr>
+                <td> {{employee.kinId}} </td>
+                <td> {{employee.firstName}} {{employee.lastName}} </td>
+                <td> {{employee.capBU}} </td>
+                <td> {{employee.designation}} </td>
+                <td> {{employee.emailAddress}} </td>
+                <td> {{employee.mobile}} </td>
+                <td> {{employee.skillSet}} </td>
+                <td> {{employee.odcStartDate}} </td>
+                <td> {{employee.location}} </td>
+                <td> {{employee.alias}} </td>
+                <td> {{employee.additionReason}} </td>
+                <td> {{employee.srsTicketNoNonOprId}} </td>
+                <td> {{employee.srsTicketDate}} </td>
+                <td> {{employee.esSponsor}} </td>
+                <td> {{employee.tokenId}} </td>
+                <td> {{employee.tokenIdIssuedDate}} </td>
+                <td> {{employee.physicalOdcAccessDate}} </td>
+                <td> {{employee.odcAccessEvidance}} </td>
+                <td> {{employee.undertakingFormSigned}} </td>
+                <td> {{employee.sfOnboardInventory}} </td> 
+                <td> {{employee.projectId}} </td>
+                <td> {{employee.projectDesc}} </td> 
+                <td> {{employee.capgeminiManager}} </td>
+                <td> {{employee.expectedBillingDate}} </td>
+                <td> {{employee.isBillable}} </td>
+                <td> {{employee.releaseComponent}} </td>
+                <td> {{employee.workOrder}} </td>
+                <td> {{employee.sfManager}} </td>
+                <td> {{employee.workArea}} </td>
+                <td> {{employee.functions}} </td>       
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="searchResult.length > 0 && report === 'offboarding'">
+      <div class="row">
+        <div class="col-lg-2" style="padding-bottom:5px">
+          <a type="button" href="#" (click)="employeeExportToExcel('employeeExport')" download="Employee_List" class="btn btn-warning"> 
+            Export to Excel 
+          </a>
+        </div> 
+      </div>
+      <div class="box box-warning">
+        <div class="box-body" style="overflow:auto;max-height:300px">
+          <table id="employeeExport" class="table table-hover table-bordered">
+            <thead>
+              <tr>
+                <th> Emp_Id </th>
+                <th> Emp_Name </th>
+                <th> Cap_BU </th>
+                <th> Designation </th>
+                <th> Capgemini Email Id </th>
+                <th> Contact No </th>
+                <th> SkillSet </th>
+                <th> ODC Start date </th>
+                <th> Release Date </th>
+                <th> Reason for release </th>
+                <th> Location </th>
+                <th> Alias </th>
+                <th> External Staff spons </th>
+                <th> Inventry updated </th>
+                <th> SRSTicketNo (For non opr) </th>
+                <th> SRSTicketDate (For non opr) </th>
+                <th> MFA Token </th>
+                <th> MFA Token Return Date </th>
+                <th> Physical Access Revoke Date </th>
+                <th> Access Revoke Evidence  </th>
+                <th> Capgemini Manager </th>
+                <th> WorkOrder Number </th>
+                <th> SF Manager </th>
+                <th> WorkArea </th>
+                <th> Function </th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let employee of searchResult">
+              <tr>
+                <td> {{employee.kinId}} </td>
+                <td> {{employee.firstName}} {{employee.lastName}} </td>
+                <td> {{employee.capBU}} </td>
+                <td> {{employee.designation}} </td>
+                <td> {{employee.emailAddress}} </td>
+                <td> {{employee.mobile}} </td>
+                <td> {{employee.skillSet}} </td>
+                <td> {{employee.odcStartDate}} </td>
+                <td> {{employee.odcReleaseDate}} </td> 
+                <td> {{employee.releaseReason}} </td> 
+                <td> {{employee.location}} </td>
+                <td> {{employee.alias}} </td>
+                <td> {{employee.esSponsor}} </td>
+                <td> {{employee.sfOffboardInventory}} </td> 
+                <td> {{employee.srsRevokeTicketNoNonOprId}} </td> 
+                <td> {{employee.srsRevokeTicketDate}} </td> 
+                <td> {{employee.tokenId}} </td>
+                <td> {{employee.tokenIdReturnedDate}} </td>
+                <td> {{employee.physicalOdcRevokeDate}} </td>
+                <td> {{employee.odcRevokeEvidance}} </td>
+                <td> {{employee.capgeminiManager}} </td>
+                <td> {{employee.workOrder}} </td>
+                <td> {{employee.sfManager}} </td>
+                <td> {{employee.workArea}} </td>
+                <td> {{employee.functions}} </td>       
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
